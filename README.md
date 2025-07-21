@@ -46,15 +46,17 @@ ansible-playbook -i inventory deploy-nodejsapp.yml
 ```
 ## 📝 Playbook Breakdown
 ### Core Workflow:
-1- System Preparation:
+1. System Preparation:
 - OS package updates
 - Node.js + npm installation
 - Support utilities (zip/gzip)
-2- Application Deployment:
+
+2. Application Deployment:
 - Secure file transfer
 - Archive extraction
 - Dependency installation via npm
-3- Service Management:
+
+3. Service Management:
 - Background application startup
 - Process verification
 - Status reporting
