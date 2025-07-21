@@ -1,0 +1,48 @@
+- hosts: node2
+  become: true
+  tasks:
+    - name: Update RPM Manager
+      dnf:
+        update_cache: true
+        state: latest
+
+    - name: Install NodeJs 
+      dnf:
+        name: 
+          - nodejs
+          - npm
+          - zip
+          - gzip
+        state: latest
+    - name: Deploy NodeJs app on the targeted host
+      copy:
+        src: /root/ansible/nodejs-app-1.0.0.tgz
+        dest: /root/app-1.0.0.tgz
+
+    - name: Unpack the file
+      unarchive:
+        src: /root/app-1.0.0.tgz
+        dest: /root/
+        remote_src: yes
+
+    - name: Install Dependencies
+      npm:
+        path: /root/package
+
+    - name: Start The Application
+      command:
+        cmd: node server.js
+        chdir: /root/package/app/
+
+      async: 1000
+      poll: 0
+
+    - name: Ensure App is up and running
+      shell:
+        cmd: ps aux | grep node
+      register: app_status
+
+    - name: Output
+      debug:
+        msg: "Node.js app is running with PID(s): {{ app_status.stdout }}"
+      tags: check_app
